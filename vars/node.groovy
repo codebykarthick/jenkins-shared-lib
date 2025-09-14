@@ -1,4 +1,6 @@
 def call(String type, Closure body) {
+    println type
+
     def yamlPath
 
     if (type == "python3") {
@@ -9,7 +11,7 @@ def call(String type, Closure body) {
 
     def podYaml = libraryResource(yamlPath)
 
-    podTemplate(yaml: podYaml, inheritFrom: '', namespace: 'apps') {
+    podTemplate(yaml: podYaml, namespace: 'apps') {
         node(POD_LABEL) {
             body()
         }
