@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins/label: "python3-agent"   # Jenkins will match on this label
+spec:
+  serviceAccountName: jenkins-deployer      # must exist in the "apps" namespace
+  containers:
+    # For python testing
+    - name: python
+      image: python:3.11
+      command: ["cat"]
+      tty: true
+      volumeMounts:
+        - mountPath: /home/jenkins/agent
+          name: workspace
+
+    # For building docker containers and publishing to GHCR
+    - name: kaniko
+      image: gcr.io/kaniko-project/executor:debug
+      command: ["cat"]
+      tty: true
+      volumeMounts:
+        - mountPath: /home/jenkins/agent
+          name: workspace
+        - mountPath: /kaniko/.docker
+          name: docker-config
+
+    # For deploying to the k3s cluster
+    - name: kubectl
+      image: bitnami/kubectl:latest
+      command: ["cat"]
+      tty: true
+      volumeMounts:
+        - mountPath: /home/jenkins/agent
+          name: workspace
+
+  volumes:
+    - name: workspace
+      emptyDir: {}
+    - name: docker-config
+      secret:
+        secretName: reg-creds
