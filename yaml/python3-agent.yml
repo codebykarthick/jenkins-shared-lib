@@ -14,6 +14,13 @@ spec:
       volumeMounts:
         - mountPath: /home/jenkins/agent
           name: workspace
+      resources:
+        requests:
+          cpu: "250m"
+          memory: "512Mi"
+        limits:
+          cpu: "1"
+          memory: "1Gi"
 
     # For building docker containers and publishing to GHCR
     - name: kaniko
@@ -25,6 +32,13 @@ spec:
           name: workspace
         - mountPath: /kaniko/.docker
           name: docker-config
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "1Gi"
+        limits:
+          cpu: "2"
+          memory: "4Gi"
 
     # For deploying to the k3s cluster
     - name: kubectl
@@ -34,6 +48,13 @@ spec:
       volumeMounts:
         - mountPath: /home/jenkins/agent
           name: workspace
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "64Mi"
+        limits:
+          cpu: "200m"
+          memory: "256Mi"
 
   volumes:
     - name: workspace
