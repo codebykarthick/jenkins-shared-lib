@@ -1,11 +1,13 @@
 def call(String type, Closure body) {
-    if (type != "python3") {
-        error "Unknown agent type: ${type}. Only 'python3' is supported right now."
+    def yamlPath
+
+    if (type == "python" || type == "python3") {
+        yamlPath = 'yaml/python3-agent.yaml'
+    } else {
+        error "Unknown agent type: ${type}. Only 'python' or 'python3' are supported."
     }
 
-    if (type == "python3") {
-        def podYaml = libraryResource('yaml/python3-agent.yaml')
-    }
+    def podYaml = libraryResource(yamlPath)
 
     podTemplate(yaml: podYaml, inheritFrom: '', namespace: 'apps') {
         node(POD_LABEL) {
