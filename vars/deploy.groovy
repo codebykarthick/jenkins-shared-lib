@@ -1,4 +1,8 @@
 def call(Map config = [:]) {
+    /**
+    Attempt deploying the manifest to the local kubernetes cluster. Only proceeds if the deployment
+    is successful (by default which can be overriden),
+    */
     def manifestPath = config.get('manifests', 'deploy/template.yaml')
     def containerName = config.get('container', 'kubectl')
     def namespace     = config.get('namespace', 'apps')
